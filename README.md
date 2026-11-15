@@ -7,8 +7,6 @@ quizzes lying around. So, inspired by airline-boarding simulations, I built a
 model of my two lecture rooms and tested five ways of handing quizzes back, in
 **5,000 simulated classes**.
 
-![Results](docs/images/cover.png)
-
 **[Watch the 72-second video](docs/video.mp4)** · **[The maths in plain English](docs/the-maths.md)** · **[3-page summary (PDF)](docs/summary-3-pages.pdf)** · **[Full technical report (PDF)](docs/technical-report.pdf)**
 
 ---
@@ -34,8 +32,6 @@ Typical class (median of 500 simulated classes per room):
 - **The surprise:** splitting the stack does not reduce how much anyone reads.
   On average each student checks 30.5 sheets either way. Splitting only helps
   because people search at the same time. [Why?](docs/the-maths.md#4-the-surprise-splitting-the-stack-doesnt-reduce-reading)
-
-![All five methods](docs/images/comparison.png)
 
 ---
 
