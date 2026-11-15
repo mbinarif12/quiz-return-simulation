@@ -110,10 +110,6 @@ for walking speeds, Treisman & Gelade (1980) and Wolfe (1998) for visual search,
 and Law (2015) for simulation methodology. The full list is in
 [docs/the-maths.md](docs/the-maths.md#references) and the technical report.
 
-## Author
-
-Muhammad B. Arif, University College Dublin.
-Built with the help of Claude (Anthropic).
 
 ## Licence
 
