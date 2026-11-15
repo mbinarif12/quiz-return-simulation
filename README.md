@@ -74,12 +74,12 @@ pip install -r requirements.txt
 
 python tests/test_search_math.py     # code vs. the probability formulas
 python tests/test_sanity.py          # every quiz accounted for, no overlaps
-python run_experiments.py --runs 20  # quick look (default: 500 per method and room)
-python run_sensitivity.py            # vary each assumption
-python make_videos.py                # one video per method -> outputs/videos/
-python make_chart.py                 # comparison chart
-python make_cover.py                 # cover image
-python make_linkedin.py              # cover + clips stitched into one video
+python run.py experiments --runs 20  # quick look (default: 500 per method and room)
+python run.py sensitivity            # vary each assumption
+python make_media.py videos          # one video per method -> outputs/videos/
+python make_media.py chart           # comparison chart
+python make_media.py cover           # cover image
+python make_media.py linkedin        # cover + clips stitched into one video
 ```
 
 To model a different room, edit or copy a file in `config/rooms/`. Rooms are
@@ -92,14 +92,15 @@ config/          room layouts and behaviour settings
 quizsim/         the simulation
   layout.py        grid, furniture, seats, passing route, path finding
   search.py        finding your own sheet (the probability model)
-  stacks.py        stack methods (one stack, two stacks, per table)
-  calling.py       calling names
-  pile.py          pile on the desk (crowd model)
+  methods.py       the five methods (stacks, calling names, pile)
+  common.py        class set-up, walking, recording
   render.py        video frames
+run.py           runs the experiments and the sensitivity check
+make_media.py    chart, cover image and videos
 tests/           checks against the maths and whole-class sanity checks
 outputs/         results: runs.csv (every simulated class), summaries
 docs/            plain-English maths, reports (PDF), images, video
-report/          LaTeX source of the two reports
+report/          LaTeX source of the two reports (+ make_report_assets.py)
 METHODS.md       compact technical description and parameter list
 ```
 

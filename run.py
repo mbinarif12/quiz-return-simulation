@@ -1,18 +1,24 @@
-"""One-at-a-time sensitivity check (Saltelli et al., 2008).
+"""Run the simulation experiments.
 
-Each assumed parameter is set to a low and a high value while everything else
-stays at its default. Every setting reuses the same seeds (common random
-numbers), so differences come from the parameter, not from luck.
+    python run.py experiments                 # 500 classes per method and room
+    python run.py experiments --runs 20       # quick look
+    python run.py experiments --methods one_stack calling --rooms g24
+    python run.py sensitivity                 # vary each assumption (60 classes per setting)
+    python run.py sensitivity --runs 20       # quicker
 
-    python run_sensitivity.py              # 60 classes per method, room and setting
-    python run_sensitivity.py --runs 20    # quicker
+experiments: writes outputs/runs.csv (one row per simulated class) and outputs/summary.md.
+Seed k gives the same seating, shuffle and speeds in every method
+(common random numbers), so methods are compared on identical classes.
 
-Writes outputs/sensitivity.csv and outputs/sensitivity.md.
+sensitivity: one-at-a-time sensitivity check (Saltelli et al., 2008). Each assumed
+parameter is set to a low and a high value while everything else stays at its
+default, reusing the same seeds. Writes outputs/sensitivity.csv and outputs/sensitivity.md.
 """
 import argparse
 import copy
 import csv
 import os
+import sys
 import time
 from concurrent.futures import ProcessPoolExecutor
 
@@ -22,8 +28,86 @@ from quizsim.common import load_params
 from quizsim.layout import load_room
 from quizsim.methods import METHODS, run
 
+
+# ---------------------------------------------------------------- experiments
+
 ROOMS = {"room1": "config/rooms/room1_science_east.yaml",
          "g24": "config/rooms/g24_agriculture.yaml"}
+FIELDS = ["room", "method", "seed", "t_done", "returned", "unclaimed", "leftovers",
+          "teaching_lost_s", "after_class_s", "distraction_min", "student_time_min",
+          "exposure_mean", "stood_up", "peak_busy", "timed_out"]
+
+_cache = {}
+
+
+def _one_class(args):
+    room_key, method, seed, params_path = args
+    if room_key not in _cache:
+        P = load_params(params_path)
+        _cache[room_key] = (load_room(ROOMS[room_key], P["sim"]["cell"]), P)
+    room, P = _cache[room_key]
+    _, m = run(method, room, P, seed)
+    m["room"] = room_key
+    return {k: m[k] for k in FIELDS}
+
+
+def mmss(s):
+    s = int(round(s))
+    return f"{s // 60}:{s % 60:02d}"
+
+
+def summarise(rows, rooms, methods):
+    lines = []
+    for rk in rooms:
+        lines.append(f"\n### {rk}\n")
+        lines.append("| Method | Finish (median) | 80% of classes | Unclaimed | Teaching lost | "
+                     "Distraction (student-min) | Students getting up | Most busy at once | Names seen per student |")
+        lines.append("|---|---|---|---|---|---|---|---|---|")
+        for mk in methods:
+            r = [x for x in rows if x["room"] == rk and x["method"] == mk]
+            if not r:
+                continue
+            col = lambda k: np.array([float(x[k]) for x in r])  # noqa: E731
+            t = col("t_done")
+            lines.append(
+                f"| {METHODS[mk][0]} | {mmss(np.median(t))} | {mmss(np.percentile(t, 10))}–{mmss(np.percentile(t, 90))} "
+                f"| {np.mean(col('unclaimed')):.1f} | {mmss(np.median(col('teaching_lost_s')))} "
+                f"| {np.median(col('distraction_min')):.0f} | {np.median(col('stood_up')):.0f} "
+                f"| {np.median(col('peak_busy')):.0f} | {np.median(col('exposure_mean')):.0f} |")
+    return "\n".join(lines)
+
+
+def experiments():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--runs", type=int, default=500)
+    ap.add_argument("--methods", nargs="+", default=list(METHODS))
+    ap.add_argument("--rooms", nargs="+", default=list(ROOMS))
+    ap.add_argument("--params", default="config/params.yaml")
+    ap.add_argument("--jobs", type=int, default=os.cpu_count())
+    ap.add_argument("--out", default="outputs")
+    args = ap.parse_args()
+    os.makedirs(args.out, exist_ok=True)
+
+    jobs = [(rk, mk, s, args.params) for rk in args.rooms for mk in args.methods for s in range(args.runs)]
+    t0 = time.time()
+    with ProcessPoolExecutor(max_workers=args.jobs) as ex:
+        rows = list(ex.map(_one_class, jobs, chunksize=4))
+    with open(os.path.join(args.out, "runs.csv"), "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=FIELDS)
+        w.writeheader()
+        w.writerows(rows)
+    text = (f"# Results: {args.runs} simulated classes per method and room\n\n"
+            "Unclaimed = mean present students without their quiz. Finish for 5a/5b is after class. "
+            "Names seen = other students' sheets each student looks at (median).\n" +
+            summarise(rows, args.rooms, args.methods))
+    with open(os.path.join(args.out, "summary.md"), "w") as f:
+        f.write(text + "\n")
+    print(text)
+    print(f"\n{len(rows)} classes in {time.time() - t0:.0f}s; timed out: {sum(r['timed_out'] for r in rows)}")
+
+
+# ---------------------------------------------------------------- sensitivity
+
 STACKS = ["one_stack", "two_stacks", "per_table"]
 PILES = ["pile_desk"]
 ALL = list(METHODS)
@@ -45,7 +129,7 @@ SETTINGS = [
 _rooms = {}
 
 
-def _one(job):
+def _one_setting(job):
     room_key, method, seed, setting, level, value = job
     P = load_params("config/params.yaml")
     if setting is not None:
@@ -61,12 +145,7 @@ def _one(job):
                 timed_out=m["timed_out"])
 
 
-def mmss(s):
-    s = int(round(s))
-    return f"{s // 60}:{s % 60:02d}"
-
-
-def main():
+def sensitivity():
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", type=int, default=60)
     ap.add_argument("--jobs", type=int, default=os.cpu_count())
@@ -79,7 +158,7 @@ def main():
             jobs += [(rk, mk, s, si, level, v) for rk in ROOMS for mk in meths for s in range(args.runs)]
     t0 = time.time()
     with ProcessPoolExecutor(max_workers=args.jobs) as ex:
-        rows = list(ex.map(_one, jobs, chunksize=4))
+        rows = list(ex.map(_one_setting, jobs, chunksize=4))
     with open(os.path.join(args.out, "sensitivity.csv"), "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
         w.writeheader()
@@ -124,5 +203,11 @@ def main():
     print(f"\n{len(rows)} classes in {time.time() - t0:.0f}s; timed out: {sum(r['timed_out'] for r in rows)}")
 
 
+COMMANDS = {"experiments": experiments, "sensitivity": sensitivity}
+
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) < 2 or sys.argv[1] not in COMMANDS:
+        sys.exit("usage: python run.py {experiments,sensitivity} [options]")
+    cmd = sys.argv.pop(1)
+    sys.argv[0] = f"run.py {cmd}"
+    COMMANDS[cmd]()

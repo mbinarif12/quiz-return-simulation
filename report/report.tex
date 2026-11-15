@@ -477,7 +477,7 @@ They make comparisons paired. The variance of a difference between methods is $\
 \item[How would you validate the model?]
 Time one real stack lap in each room and compare with the predicted distribution (13--15.6 minutes for one stack). Then refit $b$, the main free parameter, from the observed total.
 \item[How do I reproduce everything?]
-\texttt{python run\_experiments.py} (results), \texttt{python run\_sensitivity.py} (Section~\ref{sec:sensitivity}), \texttt{python tests/test\_search\_math.py} and \texttt{python tests/test\_sanity.py} (verification), \texttt{python make\_videos.py} and \texttt{python make\_chart.py} (figures). The software used was Python 3.13, NumPy 2.5, Matplotlib 3.11, PyYAML 6.0 and FFmpeg 6.1.
+\texttt{python run.py experiments} (results), \texttt{python run.py sensitivity} (Section~\ref{sec:sensitivity}), \texttt{python tests/test\_search\_math.py} and \texttt{python tests/test\_sanity.py} (verification), \texttt{python make\_media.py videos} and \texttt{python make\_media.py chart} (figures), and \texttt{python report/make\_report\_assets.py} (report figures and tables). The software used was Python 3.13, NumPy 2.5, Matplotlib 3.11, PyYAML 6.0 and FFmpeg 6.1.
 \end{description}
 
 %=====================================================================
