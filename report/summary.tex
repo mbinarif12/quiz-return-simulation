@@ -1,0 +1,138 @@
+\documentclass[10.5pt,a4paper]{article}
+\usepackage[margin=1.9cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{booktabs,tabularx}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+\setlist{itemsep=1pt,topsep=3pt}
+\pagestyle{plain}
+\setlength{\parskip}{4pt}\setlength{\parindent}{0pt}
+
+\begin{document}
+{\LARGE\bfseries Returning 60 quizzes: how the simulation works}\\[3pt]
+{\large A three-page summary} \hfill Muhammad B.\ Arif, UCD, November 2026
+\vspace{4pt}\hrule\vspace{6pt}
+
+\section*{1. The question}
+I return about 60 marked quizzes to about 50 students in a 50-minute class. The return should cost as little teaching time as possible, every student present should get their own quiz, and the absentees' quizzes should come back to me (GDPR).
+I compared five methods by simulating each one in two real rooms (E1.17 with round tables, G24 with benches), 500 times each, in the same way boarding orders for aircraft are compared by simulation (Steffen, 2008).
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+\item \textbf{One stack, passed along:} I hand the stack to one student and keep teaching.
+\item \textbf{Two stacks:} the stack is split in two, and one half starts at each end of the room.
+\item \textbf{One stack per table:} I put a small stack on every occupied table (G24: each half-row).
+\item \textbf{Calling names:} I read each name and walk the quiz to the student.
+\item \textbf{Pile on my desk, after class:} everyone collects their own quiz on the way out.
+\end{enumerate}
+
+\section*{2. The room and people moving}
+\begin{itemize}
+\item \textbf{The floor is a grid} of 40\,cm squares, one person per square. This is the standard set-up for simulating pedestrians (Burstedde et al., 2001). Tables, benches and my desk are blocked squares.
+\item \textbf{Room sizes are estimates} from my sketches: E1.17 is $16\times10$\,m with 64 seats, and G24 is $18\times11.6$\,m with 90 seats. They will be replaced with measured values.
+\item \textbf{Time} moves in steps of 0.1\,s. People walk along the shortest route around furniture, at speeds drawn from measured data: on average 1.34\,m/s, slowed by 20\,\% between furniture (Weidmann, 1993).
+\item \textbf{For the after-class pile}, everyone moves at once. Each person steps towards the square closest to the desk, people move in random order each step, and someone leaving can squeeze past someone queueing (Kirchner \& Schadschneider, 2002).
+\end{itemize}
+
+\section*{3. Finding your own quiz: the probability part}
+This is where most of the time goes.
+
+\textbf{Where is your sheet?} The stack is shuffled, so every order is equally likely. The top sheet is yours with probability $1/60$. If it isn't, the next one is yours with probability $1/59$, then $1/58$, and so on. Multiplying these out, the chance that your sheet sits at any particular position is exactly $1/60$: it is equally likely to be anywhere. So on average you check
+\[
+\frac{n+1}{2} \text{ sheets} \quad (30.5 \text{ for a stack of } 60).
+\]
+When someone takes their sheet out, the rest are still in random order, so the next student faces the same rule with a smaller stack. The first student checks about 30 sheets on average; a student near the end checks about 6.
+
+\textbf{From sheets to seconds.} Time $= a + b\times(\text{sheets checked})$, with $a = 3$\,s to pick up the stack and $b = 0.6$\,s per sheet on average. You look at sheets one by one and stop when you find yours; psychologists call this a serial search (Treisman \& Gelade, 1980; Wolfe, 1998). Each student gets their own $b$, because people aren't identical (log-normal distribution; Luce, 1986).
+
+\textbf{Missing your sheet.} When you reach your sheet, you flick past it with probability $q = 2\,\%$.
+\begin{itemize}
+\item If you are holding \emph{every} remaining sheet (one stack, or the last stack you haven't seen), you know it must be there and look again. You end up without it only if you miss it twice: $q^2 = 0.04\,\%$.
+\item If other stacks are still going round, you can't be sure your sheet was in this one, so you pass it on. If you missed it, you won't see it again (Section 5).
+\end{itemize}
+
+\textbf{Several stacks.} With 4 stacks of 15, your sheet is in the first stack you get with probability $25\,\%$, then $33\,\%$, $50\,\%$, $100\,\%$. On average you check 30.5 sheets, \emph{the same as one stack of 60}. Splitting the stack doesn't reduce reading; it helps only because several students search at the same time.
+
+\textbf{Checked against the maths.} The code was run 200{,}000 times per check. For example, it checks 30.57 sheets on average where the formula predicts 30.5, and every position comes up equally often.
+
+\section*{4. How each method plays out}
+\begin{itemize}
+\item \textbf{Stacks (1--3)} follow a fixed passing route, because students pass to the person next to them.
+  \begin{itemize}
+  \item In G24 the route snakes along each row and then into the next row, crossing the aisle once. In E1.17 it goes round each table, then to the next table.
+  \item A pass takes 2\,s while seated, sliding past empty seats on the same bench or table. If the next person is further than 2.5\,m away on another row or table (out of reach even when both lean), the holder gets up and walks it over.
+  \item Students who already have their quiz just pass the stack on. When nobody further along needs it, the leftovers are passed forward to the student nearest my desk, who brings them all up in one trip.
+  \item With one stack per table, a stack moving to the next table goes to whoever there is nearest, then round that table.
+  \end{itemize}
+\item \textbf{Calling names:} 2\,s to read a name, with a 30\,\% chance of repeating it (pronunciation), then 4\,s of silence for an absent student, or a hand goes up and I walk over. In G24 I can't get into the benches, so the quiz is passed along the row.
+\item \textbf{Pile:} only the people standing at my desk can reach it, at most 4 at a time. They split the pile into chunks and swap chunks until they find theirs. Everyone else queues. Nobody gives up and leaves, because that matches what I see in class.
+\end{itemize}
+
+\section*{5. Where unclaimed quizzes come from}
+Every method ends with my leftovers: the 10 absentees' quizzes plus any quiz whose owner didn't get it. A student present ends without their quiz in three ways:
+\begin{itemize}
+\item \textbf{One stack:} they miss their sheet twice ($0.04\,\%$ each, so about 0.02 students per class).
+\item \textbf{Two stacks, stack per table, pile:} they flick past their sheet in a stack that isn't their last one. They pass it on, believing it is in another stack, and never see it again. This happens about $2\,\%\times(1-1/\text{number of stacks})$ of the time, so 0.5--0.9 students per class.
+\item \textbf{Calling names:} a student doesn't recognise their mispronounced name ($2\,\%$, about 1 per class).
+\end{itemize}
+In calling names, the leftovers are already in my hand, because I hold the stack throughout. In the stack methods, the leftovers travel with the stack and have to be carried back to me. It is the same number of absentee quizzes either way.
+
+\section*{6. The experiment}
+\begin{itemize}
+\item \textbf{500 simulated classes per method and room}, 5{,}000 in total, taking about 15 minutes on two processor cores.
+\item \textbf{What changes from class to class:} each class has random seating, a random shuffle, random absentees and random walking and reading speeds.
+\item \textbf{The same classes for every method.} Class number $r$ uses random seed $r$, so every method faces exactly the same classes: same seats, same shuffle, same people. This is called \emph{common random numbers} (Law, 2015). Differences come from the method, not from luck.
+\item \textbf{What's reported:} the median (a typical class) and the range that 8 in 10 classes fall within.
+\end{itemize}
+
+\section*{7. Results}
+\begin{center}\small
+\begin{tabular}{lrrrrccc}
+\toprule
+Method & E1.17 & G24 & Teaching I lose & Without & Student-min & Times a & Most busy \\
+ & & & & quiz & busy & student gets up & at once \\
+\midrule
+1 One stack & 14:01 & 14:04 & 2--8 s & 0.02 & 14 & 3--5 & 1 \\
+2 Two stacks & 9:38 & 9:49 & 13--26 s & 0.5 & 18--19 & 6--9 & 2 \\
+3 Stack per table & \textbf{5:13} & \textbf{6:01} & 38--87 s & 0.9 & 35--42 & 26--31 & 8--10 \\
+4 Calling names & 10:41 & 14:20 & all of it & 1.0 & 3--5 & 0 & 1--3 \\
+5 Pile (after class) & 5:28 & 5:36 & none (after class) & 0.8 & -- & everyone & 50 \\
+\bottomrule
+\end{tabular}
+\\[3pt]
+{\footnotesize Median finish time (mm:ss) over 500 classes. ``Student-min busy'' = total student time spent searching, passing or walking during class. ``Times a student gets up'' = walks to carry a stack to another row or table, or the leftovers to my desk. ``Most busy at once'' = peak number of students occupied with the return at the same moment.}
+\end{center}
+
+\begin{itemize}
+\item \textbf{Fastest in class vs fastest overall.} ``In class'' compares methods 1--4, which happen while I teach. Method 3 wins there in both rooms. ``Overall'' adds the after-class pile, which is about as fast as method 3 (within half a minute). But everyone, including me, stays behind for it.
+\item \textbf{The trade-off.}
+  \begin{itemize}
+  \item Splitting into more stacks is faster.
+  \item It costs me more time handing stacks out.
+  \item It disrupts the class far more. With one stack per table, up to 8--10 students are busy at once, and students get up 26--31 times per class (against 3--5 for one stack, with 1 student busy at a time).
+  \item One stack is slow but costs me seconds.
+  \end{itemize}
+\item \textbf{Robustness.} Each assumption was halved or doubled roughly, one at a time (40 settings). One stack per table always stayed fastest in class, and two stacks always beat one stack. Reading speed $b$ matters most: one stack takes 9 to 20 minutes depending on it.
+\end{itemize}
+
+\section*{8. Limits}
+\begin{itemize}
+\item Room sizes and timings marked as assumptions are not measured. Timing one real stack in class would calibrate $b$.
+\item Seating is random, and real friends cluster.
+\item Chatting and general noise are not modelled. Disruption is measured by student-minutes busy, times students get up and the most busy at once, not converted into lost learning.
+\end{itemize}
+
+{\small\textbf{References.}
+Burstedde et al.\ (2001), \emph{Physica A} 295, 507--525.
+Kirchner \& Schadschneider (2002), \emph{Physica A} 312, 260--276.
+Weidmann (1993), IVT Report 90, ETH Z\"urich.
+Treisman \& Gelade (1980), \emph{Cognitive Psychology} 12, 97--136.
+Wolfe (1998), \emph{Psychological Science} 9, 33--39.
+Luce (1986), \emph{Response Times}, OUP.
+Law (2015), \emph{Simulation Modeling and Analysis}, McGraw-Hill.
+Steffen (2008), \emph{J.\ Air Transport Management} 14, 146--150.
+Full details, proofs and all parameters: the 17-page technical report.}
+\end{document}

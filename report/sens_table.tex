@@ -1,0 +1,67 @@
+Each assumed parameter was set to a low and a high value, one at a time, with everything else at its default (one-at-a-time design \cite{saltelli2008}).
+Each setting uses the same 60 seeds (common random numbers). Entries are median finish times (mm:ss); the last column gives the in-class ranking (methods 1--4, fastest first). Method 5 is after class.
+
+{\small\setlength{\tabcolsep}{4pt}
+\begin{table}[htbp]\centering\footnotesize
+\begin{tabular}{lrrrrrrl}
+\toprule
+Assumption (default) & Value & 1 & 2 & 3 & 4 & 5 & In-class ranking \\
+\midrule
+\textbf{Defaults} &  & 13:51 & 9:29 & 5:13 & 10:39 & 5:28 & 3<2<4<1 \\
+b, seconds per sheet (0.6) & 0.3 & 9:10 & 6:42 & 4:21 & 10:39 & 4:12 & 3<2<1<4\,$\ast$ \\
+ & 1.0 & 20:05 & 13:09 & 6:20 & 10:39 & 7:17 & 3<4<2<1\,$\ast$ \\
+a, setup time (3 s) & 1.5 & 12:36 & 8:31 & 4:28 & 10:39 & 4:45 & 3<2<4<1 \\
+ & 6.0 & 16:21 & 11:23 & 6:38 & 10:39 & 7:07 & 3<4<2<1\,$\ast$ \\
+q, chance of missing your sheet (2\%) & 0.0 & 13:33 & 9:21 & 5:03 & 10:39 & 5:20 & 3<2<4<1 \\
+ & 0.05 & 14:22 & 9:45 & 5:17 & 10:39 & 5:41 & 3<2<4<1 \\
+reach for a seated hand-over (2.5 m) & 1.7 & 14:01 & 9:36 & 5:21 & 10:39 & 5:28 & 3<2<4<1 \\
+ & 3.0 & 13:49 & 9:28 & 5:08 & 10:39 & 5:28 & 3<2<4<1 \\
+hand-over time (2 s) & 1.0 & 13:02 & 8:39 & 4:27 & 9:54 & 5:28 & 3<2<4<1 \\
+ & 4.0 & 15:39 & 11:17 & 6:52 & 12:17 & 5:28 & 3<2<4<1 \\
+walking speed indoors ($\times$0.8) & 0.6 & 13:53 & 9:29 & 5:17 & 12:03 & 5:31 & 3<2<4<1 \\
+ & 1.0 & 13:50 & 9:28 & 5:10 & 9:48 & 5:19 & 3<2<4<1 \\
+chance a name needs repeating (30\%) & 0.0 & 13:51 & 9:29 & 5:13 & 9:45 & 5:28 & 3<2<4<1 \\
+ & 0.6 & 13:51 & 9:29 & 5:13 & 11:48 & 5:28 & 3<2<4<1 \\
+time to read a name (2 s) & 1.0 & 13:51 & 9:29 & 5:13 & 9:19 & 5:28 & 3<4<2<1\,$\ast$ \\
+ & 4.0 & 13:51 & 9:29 & 5:13 & 13:25 & 5:28 & 3<2<4<1 \\
+people at the pile at once (4) & 2 & 13:51 & 9:29 & 5:13 & 10:39 & 7:36 & 3<2<4<1 \\
+ & 6 & 13:51 & 9:29 & 5:13 & 10:39 & 4:46 & 3<2<4<1 \\
+patience before giving up (unlimited) & 120.0 & 13:51 & 9:29 & 5:13 & 10:39 & 3:38 & 3<2<4<1 \\
+ & 600.0 & 13:51 & 9:29 & 5:13 & 10:39 & 5:26 & 3<2<4<1 \\
+\bottomrule
+\end{tabular}
+\caption{Sensitivity, room E1.17. $\ast$ = in-class ranking differs from the default (3<2<4<1).}
+\end{table}
+\begin{table}[htbp]\centering\footnotesize
+\begin{tabular}{lrrrrrrl}
+\toprule
+Assumption (default) & Value & 1 & 2 & 3 & 4 & 5 & In-class ranking \\
+\midrule
+\textbf{Defaults} &  & 13:56 & 9:47 & 6:01 & 14:23 & 5:40 & 3<2<1<4 \\
+b, seconds per sheet (0.6) & 0.3 & 9:17 & 6:57 & 5:27 & 14:23 & 4:08 & 3<2<1<4 \\
+ & 1.0 & 20:09 & 13:36 & 6:51 & 14:23 & 7:14 & 3<2<4<1\,$\ast$ \\
+a, setup time (3 s) & 1.5 & 12:41 & 8:48 & 5:20 & 14:23 & 4:43 & 3<2<1<4 \\
+ & 6.0 & 16:26 & 11:33 & 7:27 & 14:23 & 7:08 & 3<2<4<1\,$\ast$ \\
+q, chance of missing your sheet (2\%) & 0.0 & 13:31 & 9:29 & 5:59 & 14:23 & 5:34 & 3<2<1<4 \\
+ & 0.05 & 14:28 & 10:01 & 6:06 & 14:23 & 5:50 & 3<2<4<1\,$\ast$ \\
+reach for a seated hand-over (2.5 m) & 1.7 & 14:07 & 9:56 & 6:20 & 14:23 & 5:40 & 3<2<1<4 \\
+ & 3.0 & 13:54 & 9:43 & 5:53 & 14:23 & 5:40 & 3<2<1<4 \\
+hand-over time (2 s) & 1.0 & 13:08 & 8:56 & 5:17 & 13:38 & 5:40 & 3<2<1<4 \\
+ & 4.0 & 15:44 & 11:32 & 7:41 & 16:03 & 5:40 & 3<2<1<4 \\
+walking speed indoors ($\times$0.8) & 0.6 & 14:00 & 9:53 & 6:37 & 16:58 & 5:37 & 3<2<1<4 \\
+ & 1.0 & 13:54 & 9:43 & 5:43 & 12:50 & 5:34 & 3<2<4<1\,$\ast$ \\
+chance a name needs repeating (30\%) & 0.0 & 13:56 & 9:47 & 6:01 & 13:32 & 5:40 & 3<2<4<1\,$\ast$ \\
+ & 0.6 & 13:56 & 9:47 & 6:01 & 15:37 & 5:40 & 3<2<1<4 \\
+time to read a name (2 s) & 1.0 & 13:56 & 9:47 & 6:01 & 13:01 & 5:40 & 3<2<4<1\,$\ast$ \\
+ & 4.0 & 13:56 & 9:47 & 6:01 & 17:14 & 5:40 & 3<2<1<4 \\
+people at the pile at once (4) & 2 & 13:56 & 9:47 & 6:01 & 14:23 & 7:39 & 3<2<1<4 \\
+ & 6 & 13:56 & 9:47 & 6:01 & 14:23 & 4:59 & 3<2<1<4 \\
+patience before giving up (unlimited) & 120.0 & 13:56 & 9:47 & 6:01 & 14:23 & 3:46 & 3<2<1<4 \\
+ & 600.0 & 13:56 & 9:47 & 6:01 & 14:23 & 5:35 & 3<2<1<4 \\
+\bottomrule
+\end{tabular}
+\caption{Sensitivity, room G24. $\ast$ = in-class ranking differs from the default (3<2<1<4).}
+\end{table}
+}
+
+\paragraph{Summary.} Across 40 settings (both rooms), the in-class ranking changed in 10. In every setting, one stack per table (3) was the fastest in-class method, and two stacks (2) beat one stack (1). Every change in ranking involved only the position of calling names (4), which competes closely with one stack in G24 (14:20 vs 14:04 at the defaults) and with two stacks when search is slow. Search speed $b$ has by far the largest effect on the stack methods (one stack: about 9--20 minutes over $b=0.3$--$1.0$\,s), which is why measuring it is the first priority.

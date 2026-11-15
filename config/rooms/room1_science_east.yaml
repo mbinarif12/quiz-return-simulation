@@ -1,0 +1,35 @@
+# Science East E1.17 / E1.18 — 8 round tables, two front doors.
+# Coordinates are in metres. Origin = front-left corner; y grows towards the back.
+# Edit freely: the simulation rebuilds its grid from this file.
+name: "Science East E1.17 / E1.18"
+short_name: "Room E1.17"
+width: 16.0
+depth: 10.0
+
+round_tables:
+  radius: 0.8          # table top radius (m)
+  seat_radius: 1.2     # distance from table centre to a seated student (m)
+  seats_per_table: 8
+  centres:             # [x, y]
+    - [2.4, 7.6]
+    - [6.0, 7.6]
+    - [9.6, 7.6]
+    - [13.2, 7.6]
+    - [2.4, 4.0]
+    - [6.0, 4.0]
+    - [9.6, 4.0]
+    - [13.2, 4.0]
+
+desk: {x0: 6.8, x1: 9.2, y0: 0.4, y1: 1.2}
+teacher_spot: [8.0, 0.2]        # where you stand behind the desk
+teaching_spot: [4.6, 1.2]       # where you stand while teaching
+
+doors:                           # gaps in the walls
+  - {wall: front, from: 0.6, to: 1.8}
+  - {wall: front, from: 14.2, to: 15.4}
+
+decor:                           # drawn only, no effect on movement
+  - {kind: whiteboard, wall: left, from: 2.6, to: 9.2}
+  - {kind: whiteboard, wall: right, from: 2.6, to: 9.2}
+  - {kind: screen, wall: front, from: 3.4, to: 5.6}
+  - {kind: screen, wall: front, from: 10.4, to: 12.6}

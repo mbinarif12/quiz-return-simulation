@@ -1,0 +1,26 @@
+# Agriculture G24 — two banks of long benches with a centre aisle, one door front-left.
+# Coordinates in metres. Origin = front-left corner; y grows towards the back.
+name: "Agriculture G24"
+short_name: "Room G24"
+width: 18.0
+depth: 11.6
+
+bench_rows:
+  n_rows: 5
+  first_bench_y: 3.2     # front edge of the front-most bench
+  row_pitch: 1.6         # bench (0.8) + seat line (0.4) + walkway (0.4)
+  bench_depth: 0.8
+  seat_spacing: 0.8
+  banks:
+    - {x0: 0.8, x1: 6.4, seats: 7}     # left bank
+    - {x0: 8.4, x1: 17.2, seats: 11}   # right bank
+
+desk: {x0: 8.0, x1: 10.4, y0: 1.2, y1: 2.0}
+teacher_spot: [9.2, 0.8]
+teaching_spot: [6.0, 1.0]
+
+doors:
+  - {wall: left, from: 1.2, to: 2.4}
+
+decor:
+  - {kind: whiteboard, wall: front, from: 3.6, to: 14.4}

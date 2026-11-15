@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+# generated videos (re-create with make_videos.py / make_linkedin.py)
+outputs/*.mp4
+outputs/videos/
+outputs/videos_short/
+# LaTeX build files
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.pdf

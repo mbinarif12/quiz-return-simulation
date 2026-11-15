@@ -1,0 +1,55 @@
+# Behaviour parameters. Sources are given where one exists; everything marked
+# ASSUMPTION is an estimate and should be varied in the sensitivity analysis (Phase 2).
+
+class:
+  n_quizzes: 60            # quizzes in the stack
+  n_present: 50            # students in the room (the other 10 are absent)
+
+sim:
+  dt: 0.1                  # seconds per tick
+  cell: 0.4                # grid cell size (m) — Burstedde et al. (2001)
+  max_time: 2400           # safety stop (s)
+
+walking:
+  # Free walking speed, mean and SD — Weidmann (1993), IVT Bericht 90, ETH Zurich.
+  speed_mean: 1.34
+  speed_sd: 0.26
+  speed_min: 0.7
+  speed_max: 2.0
+  # Indoor furniture slows people below free-flow speed. ASSUMPTION.
+  indoor_factor: 0.8
+
+search:
+  # Serial self-terminating search (Treisman & Gelade 1980; Wolfe 1998):
+  # time = a + b * (sheets checked). Full model in METHODS.md.
+  base_time: 3.0           # a: pick up the stack and start flicking (s) — ASSUMPTION
+  per_sheet_mean: 0.6      # b: average seconds per sheet (read name + flick) — ASSUMPTION, agreed with lecturer
+  per_sheet_cv: 0.3        # spread of b between students (log-normal, Luce 1986) — ASSUMPTION
+  p_miss: 0.02             # q: chance of flicking past your own sheet — ASSUMPTION
+  max_passes: 2            # passes through a stack that must contain your sheet
+
+handover:
+  reach: 2.5               # max distance for a hand-over without getting up: both students lean across (m) — ASSUMPTION
+  time: 2.0                # seconds for a hand-over — ASSUMPTION
+  slide_per_m: 0.6         # extra s per metre when a stack slides along a bench / table past empty seats — ASSUMPTION
+  drop_time: 1.0           # placing leftovers on the desk (s)
+
+calling:
+  call_time: 2.0           # reading one name aloud (s) — ASSUMPTION
+  p_repeat: 0.3            # a name needs saying again (pronunciation) — ASSUMPTION
+  max_repeats: 2
+  absent_wait: 4.0         # silence before deciding the student is absent (s) — ASSUMPTION
+  p_no_response: 0.02      # a present student doesn't recognise their name — ASSUMPTION
+  response_time: 1.5       # hand goes up (s) — ASSUMPTION
+  lecturer_reach: 1.0      # lecturer hands it over directly within this distance (m)
+  pass_time: 1.5           # one seated pass along a bench (s) — ASSUMPTION
+
+pile:
+  getup_delay_max: 20.0    # packing up before standing: Uniform(0, max) s — ASSUMPTION
+  max_at_pile: 4           # people who can handle the pile at once — ASSUMPTION
+  access_radius: 1.4       # standing spots within this distance of the pile (m)
+  swap_time: 3.0           # waiting for / swapping a chunk with someone (s) — ASSUMPTION
+  patience_median: 36000.0 # s of queueing before giving up. Effectively never: the lecturer reports every present student collects theirs (only absentees' quizzes are left)
+  patience_sigma: 0.5      # log-normal spread of patience — ASSUMPTION
+  p_swap: 0.3              # leaver squeezes past someone queueing, per tick (anti-gridlock rule)
+  door_index: 0            # which door the pile sits at in the door version (0 = first door in the room file)
